@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Método Meia Garantida</title>
+<meta property="og:title" content="Método Meia Garantida — Descubra sua economia">
+<meta property="og:description" content="Responda 4 perguntas e veja quanto você pode economizar por ano pagando meia-entrada 100% dentro da lei.">
+<meta property="og:image" content="https://meia-garantida.netlify.app/pages/capa.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="Responda 4 perguntas rápidas e descubra quanto você gasta por ano pagando ingresso inteiro. Guia passo a passo para ter a carteirinha de estudante (DNE) dentro da lei.">
+<link rel="dns-prefetch" href="https://connect.facebook.net">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/manrope.woff2" crossorigin>
+<link rel="preload" as="image" href="/pages/tickets-v2.jpg" fetchpriority="high">
+<script>
+(function(f){
+  var n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];
+  n('init','1599264621849575');n('track','PageView');
+  var loaded=!1;
+  function load(){if(loaded)return;loaded=!0;var t=document.createElement('script');t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';document.head.appendChild(t);}
+  function later(){requestAnimationFrame(function(){setTimeout(load,0);});setTimeout(load,400);}
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',later);}else{later();}
+})(window);
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1599264621849575&ev=PageView&noscript=1"
+/></noscript>
+<style>
+@font-face{font-family:'Manrope';font-style:normal;font-weight:700 800;font-display:swap;src:url(/fonts/manrope.woff2) format('woff2');}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/plexmono-400.woff2) format('woff2');}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/plexmono-600.woff2) format('woff2');}
+:root{
+  --font-body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --bg:#F4F7FB;
+  --bg-soft:#EAF1FB;
+  --surface:#FFFFFF;
+  --surface-2:#EFF4FA;
+  --line:#DCE6F2;
+  --line-soft:#E7EEF7;
+  --navy:#1B4B91;
+  --navy-dark:#0F2E5C;
+  --green:#189B54;
+  --green-dark:#12793F;
+  --amber:#B4770E;
+  --amber-bg:#FCF1DD;
+  --warn:#C0392B;
+  --warn-bg:#FDECEB;
+  --text:#16243A;
+  --text-dim:#51617A;
+  --text-faint:#5F7290;
+  --shadow: 0 16px 40px -22px rgba(15,46,92,.25);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(ellipse 900px 500px at 15% -10%, rgba(27,75,145,.06), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 90% 10%, rgba(24,155,84,.05), transparent 60%);
+}
+img{max-width:100%;}
+h1,h2,h3{font-family:'Manrope',system-ui,sans-serif; letter-spacing:-.01em; text-wrap:balance; margin:0; font-weight:800; color:var(--navy-dark);}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace;}
+.wrap{max-width:640px; margin:0 auto; padding:0 20px;}
+@media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+
+/* ---------- topbar ---------- */
+.topbar{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:16px 22px; max-width:640px; margin:0 auto;
+  border-bottom:1px solid var(--line);
+}
+.topbar-brand{font-family:'Manrope',sans-serif; font-weight:800; font-size:1.05rem; letter-spacing:-.01em; color:var(--navy);}
+.topbar-tag{font-family:'IBM Plex Mono',monospace; font-size:.62rem; letter-spacing:.1em; color:var(--navy); background:var(--bg-soft); border:1px solid var(--line); padding:4px 9px; border-radius:20px;}
+
+/* ---------- card component ---------- */
+.ticket{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:14px;
+  position:relative;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.ticket + .ticket{ margin-top:22px; }
+.ticket-body{padding:28px 26px 30px;}
+.ticket-stub{
+  padding:12px 26px;
+  background:var(--bg-soft);
+  border-top:1px solid var(--line);
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.08em; color:var(--navy);
+}
+.perf{
+  height:1px;
+  background:var(--line);
+  margin:0;
+}
+
+/* ---------- quiz shell ---------- */
+#quiz{ padding:30px 20px 60px; }
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace; font-size:.68rem; letter-spacing:.12em;
+  color:var(--navy); text-transform:uppercase; margin-bottom:10px; display:block;
+}
+.step-title{font-size:1.7rem; line-height:1.12; color:var(--navy-dark);}
+.step-sub{color:var(--text-dim); font-size:.98rem; margin-top:10px; line-height:1.5;}
+
+/* checklist progress */
+.punchrow{ display:flex; gap:10px; margin-bottom:22px; }
+.punch{
+  width:26px; height:26px; border-radius:50%;
+  border:2px solid var(--line);
+  display:flex; align-items:center; justify-content:center;
+  transition: transform .25s ease, border-color .25s ease, background .25s ease;
+  background:var(--surface);
+}
+.punch.done{
+  border-style:solid; border-color:var(--green); background:var(--green);
+  transform:scale(1.06);
+  box-shadow:0 0 0 4px rgba(24,155,84,.14);
+}
+.punch.done::after{ content:"✓"; font-size:.75rem; font-weight:700; color:#fff; }
+
+/* options */
+.opt-list{ display:flex; flex-direction:column; gap:10px; margin-top:22px; }
+.opt{
+  text-align:left;
+  background:var(--surface);
+  border:1px solid var(--line);
+  color:var(--text);
+  font-family:var(--font-body); font-size:.98rem; font-weight:600;
+  padding:15px 18px; border-radius:10px; cursor:pointer;
+  display:flex; justify-content:space-between; align-items:center; gap:10px;
+  transition: border-color .15s ease, background .15s ease, transform .1s ease;
+}
+.opt:hover{ border-color:var(--navy); background:var(--bg-soft); }
+.opt:active{ transform:scale(.98); }
+.opt:focus-visible{ outline:2px solid var(--navy); outline-offset:2px; }
+.opt-arrow{ color:var(--navy); font-family:'IBM Plex Mono',monospace; }
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  font-family:'Manrope',sans-serif; font-weight:700; letter-spacing:-.005em; font-size:1.02rem;
+  background:var(--navy); color:#fff; border:none; border-radius:10px;
+  padding:16px 22px; cursor:pointer; width:100%;
+  box-shadow:0 10px 24px -12px rgba(27,75,145,.55);
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+.btn:hover{ background:var(--navy-dark); box-shadow:0 14px 30px -12px rgba(27,75,145,.6); }
+.btn:active{ transform:translateY(1px) scale(.99); }
+.btn:focus-visible{ outline:2px solid var(--navy-dark); outline-offset:3px; }
+.btn-red{ background:var(--green-dark); color:#fff; box-shadow:0 10px 24px -12px rgba(18,121,63,.5);}
+.btn-red:hover{ background:#0E6032; box-shadow:0 14px 30px -12px rgba(18,121,63,.55); }
+.btn-ghost{
+  background:transparent; color:var(--text-dim); border:1px solid var(--line);
+  font-family:var(--font-body); letter-spacing:0; font-size:.85rem; font-weight:600;
+  padding:10px 16px; width:auto; box-shadow:none;
+}
+.btn-ghost:hover{ background:var(--surface-2); }
+
+/* info card */
+.info-card{ text-align:left; }
+.info-icon{ font-size:1.8rem; }
+.fact{
+  background:var(--bg-soft); border-left:3px solid var(--navy);
+  border-radius:8px; padding:16px 18px; margin-top:16px; color:var(--text-dim); font-size:.92rem; line-height:1.55;
+}
+
+/* loading */
+.loading-wrap{ text-align:center; padding:20px 0 6px; }
+.printer{
+  width:100%; height:6px; background:var(--surface-2); border-radius:4px; overflow:hidden; margin:26px 0 22px;
+}
+.printer-bar{
+  height:100%; width:30%; border-radius:4px;
+  background:repeating-linear-gradient(45deg, var(--navy), var(--navy) 8px, var(--green) 8px, var(--green) 16px);
+  animation: feed 1.4s linear infinite;
+}
+@keyframes feed{ 0%{ transform:translateX(-110%);} 100%{ transform:translateX(360%);} }
+.loading-msg{ font-family:'IBM Plex Mono',monospace; font-size:.85rem; color:var(--text-dim); min-height:1.4em; }
+
+/* ---------- sales page ---------- */
+#sales{ padding:0 20px 80px; }
+.diag{
+  text-align:center; padding:36px 24px 30px;
+}
+.diag-eyebrow{ font-family:'IBM Plex Mono',monospace; letter-spacing:.12em; font-size:.7rem; color:var(--text-faint); text-transform:uppercase;}
+.diag-number{
+  font-family:'Manrope',sans-serif; font-weight:800; font-size:3.1rem; color:var(--navy); line-height:1; margin:14px 0 6px;
+}
+.diag-sub{ color:var(--text-dim); font-size:.95rem; max-width:420px; margin:0 auto; line-height:1.5;}
+.diag-note{ margin-top:16px; font-size:.82rem; color:var(--text-faint); font-family:'IBM Plex Mono',monospace; }
+
+.hero{ text-align:center; padding:8px 26px 26px; }
+.hero h1{ font-size:2.3rem; color:var(--navy-dark); margin-top:8px; }
+.hero .accent{ color:var(--navy); }
+.hero-sub{ color:var(--text-dim); margin-top:14px; font-size:1.02rem; line-height:1.55; }
+.badge-row{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.badge{
+  font-family:'IBM Plex Mono',monospace; font-size:.66rem; letter-spacing:.06em; text-transform:uppercase;
+  background:var(--bg-soft); border:1px solid var(--line); color:var(--navy); padding:5px 10px; border-radius:20px;
+}
+
+.player{
+  margin:22px auto 6px; max-width:100%; aspect-ratio:16/10; border-radius:12px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(27,75,145,.08), transparent 60%),
+    linear-gradient(160deg, #EFF4FA, #E3EBF6);
+  border:1px solid var(--line);
+  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px;
+  position:relative;
+}
+.playbtn{
+  width:64px; height:64px; border-radius:50%; background:var(--navy); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:1.4rem; box-shadow:0 10px 26px -10px rgba(27,75,145,.5);
+}
+.player-cap{ font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:var(--text-faint); letter-spacing:.08em; }
+
+.wa-audio{ margin:20px auto 4px; max-width:400px; text-align:left; }
+.wa-audio-label{ text-align:center; font-size:.92rem; line-height:1.35; font-weight:700; color:var(--navy-dark); margin:0 0 10px; text-wrap:balance; }
+.wa-avatar-img{ width:34px; height:34px; border-radius:50%; object-fit:cover; flex-shrink:0; background:var(--bg-soft); }
+.wa-chat{ background:#EFEAE2; border:1px solid var(--line); border-radius:14px; padding:12px; }
+.wa-chat-head{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.wa-chat-head .wa-avatar{ width:34px; height:34px; flex-shrink:0; }
+.wa-chat-name{ font-weight:700; font-size:.86rem; color:#111B21; line-height:1.2; }
+.wa-chat-sub{ font-size:.7rem; color:#3B4A54; }
+.wa-voice{ background:#D9FDD3; border-radius:10px 10px 10px 2px; padding:10px 12px 6px; }
+.wa-voice-row{ display:flex; align-items:center; gap:10px; }
+.wa-play{ flex-shrink:0; width:40px; height:40px; border-radius:50%; border:0; background:var(--green-dark); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; }
+.wa-play:focus-visible{ outline:2px solid var(--navy-dark); outline-offset:2px; }
+.wa-play .i-pause{ display:none; }
+.wa-play.on .i-play{ display:none; }
+.wa-play.on .i-pause{ display:block; }
+.wa-wave{ flex:1; display:flex; align-items:center; gap:2px; height:32px; cursor:pointer; }
+.wa-wave span{ flex:1; min-width:2px; border-radius:2px; background:rgba(17,27,33,.35); }
+.wa-wave span.on{ background:#12793F; }
+.wa-voice-meta{ display:flex; justify-content:space-between; align-items:center; font-size:.68rem; color:#3B4A54; margin-top:2px; padding-left:50px; }
+.wa-voice-meta .ck{ color:#1A6FB0; }
+.carousel-wrap{ position:relative; }
+.carousel-arrow{
+  position:absolute; top:45%; transform:translateY(-50%); z-index:3;
+  width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:var(--surface);
+  color:var(--navy); font-size:1rem; cursor:pointer; box-shadow:var(--shadow);
+  display:flex; align-items:center; justify-content:center;
+}
+.carousel-arrow.prev{ left:-6px; }
+.carousel-arrow.next{ right:-6px; }
+.carousel-arrow:hover{ background:var(--bg-soft); }
+@media (max-width:480px){ .carousel-arrow{ display:none; } }
+.carousel{ display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; padding:6px 4px 12px; margin:20px -4px 0; -webkit-overflow-scrolling:touch; }
+.carousel::-webkit-scrollbar{ height:5px; }
+.carousel::-webkit-scrollbar-thumb{ background:var(--line); border-radius:3px; }
+.slide{ flex:0 0 78%; scroll-snap-align:center; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:18px; text-align:center; }
+.slide svg{ width:100%; max-width:220px; height:auto; margin:0 auto; display:block; }
+.slide-cap{ margin-top:10px; font-size:.82rem; font-weight:700; color:var(--navy-dark); }
+.dots{ display:flex; justify-content:center; gap:6px; margin-top:2px; }
+.dot{ width:6px; height:6px; border-radius:50%; background:var(--line); transition:width .2s ease,border-radius .2s ease; }
+.dot.active{ background:var(--navy); width:16px; border-radius:3px; }
+
+.section{ padding:34px 26px; }
+.section-head{ text-align:center; margin-bottom:22px; }
+.section-head h2{ font-size:1.65rem; }
+.section-head p{ color:var(--text-dim); font-size:.92rem; margin-top:8px; }
+
+.grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.item-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:16px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.item-card .ic{ font-size:1.3rem; }
+.item-card h3{ font-family:var(--font-body); font-weight:700; font-size:.94rem; color:var(--text); letter-spacing:0; }
+.item-card p{ margin:0; color:var(--text-dim); font-size:.82rem; line-height:1.4; }
+
+.chip-list{ display:flex; flex-wrap:wrap; gap:9px; justify-content:center; }
+.chip{
+  background:var(--bg-soft); border:1px solid var(--line); color:var(--navy-dark);
+  padding:9px 14px; border-radius:20px; font-size:.85rem;
+}
+
+.bonus{
+  display:flex; align-items:center; gap:14px; background:var(--surface);
+  border:1px solid var(--line); border-left:3px solid var(--green); border-radius:10px; padding:14px 16px;
+}
+.bonus + .bonus{ margin-top:10px; }
+.bonus-num{ font-family:'Manrope',sans-serif; font-weight:800; font-size:1.4rem; color:var(--navy); width:34px; text-align:center; flex-shrink:0;}
+.bonus-txt{ flex:1; }
+.bonus-txt h3{ font-family:var(--font-body); font-weight:700; font-size:.92rem; color:var(--text); }
+.bonus-txt p{ margin:2px 0 0; color:var(--text-faint); font-size:.78rem; }
+.bonus-price{ text-align:right; flex-shrink:0; }
+.bonus-was{ text-decoration:line-through; color:var(--text-faint); font-size:.76rem; font-family:'IBM Plex Mono',monospace; display:block;}
+.bonus-now{ color:var(--green-dark); font-weight:700; font-size:.85rem; font-family:'IBM Plex Mono',monospace; }
+
+.wa-card{
+  background:#F0FBF3; border:1px solid #CFEBD6; border-radius:12px; padding:14px 16px; max-width:340px;
+}
+.wa-card + .wa-card{ margin-top:14px; }
+.wa-head{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.wa-avatar{ width:32px; height:32px; border-radius:50%; background:var(--navy); display:flex; align-items:center; justify-content:center; font-family:'Manrope'; font-weight:700; color:#fff; font-size:.9rem; }
+.wa-name{ font-weight:700; font-size:.86rem; color:#1C4B2C; }
+.wa-time{ font-size:.68rem; color:#3F6B4C; margin-left:auto; }
+.wa-bubble{ background:#FFFFFF; border-radius:8px; padding:10px 12px; font-size:.85rem; color:#233B29; line-height:1.45; }
+.wa-check{ text-align:right; font-size:.72rem; color:#1A6FB0; margin-top:4px; }
+.placeholder-note{ text-align:center; font-size:.7rem; color:var(--text-faint); margin-top:12px; font-family:'IBM Plex Mono',monospace;}
+
+.offer{
+  background:linear-gradient(165deg, #FFFFFF, #EFF4FA);
+  border:1px solid var(--line);
+}
+.offer .ticket-body{ text-align:center; }
+.offer-was{ color:var(--text-faint); text-decoration:line-through; font-family:'IBM Plex Mono',monospace; font-size:1rem; }
+.offer-now{ font-family:'Manrope',sans-serif; font-weight:800; font-size:2.9rem; color:var(--navy); margin:4px 0 2px; }
+.offer-now span{ font-size:1.3rem; vertical-align:top; }
+.offer-cap{ color:var(--text-dim); font-size:.85rem; margin-bottom:20px; }
+
+.stamp{
+  display:inline-flex; align-items:center; gap:6px; border:2px solid var(--green); color:var(--green-dark);
+  background:#F0FBF3;
+  font-family:'Manrope',sans-serif; font-weight:700; letter-spacing:.02em; font-size:.82rem;
+  padding:8px 18px; border-radius:24px;
+  margin:18px auto 0;
+}
+.stamp::before{ content:"✓"; display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; background:var(--green); color:#fff; font-size:.65rem; }
+
+.faq details{
+  background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:10px;
+}
+.faq summary{ cursor:pointer; font-weight:700; font-size:.92rem; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:10px; color:var(--navy-dark);}
+.faq summary::-webkit-details-marker{ display:none; }
+.faq summary::after{ content:"+"; font-family:'Manrope'; font-weight:700; font-size:1.3rem; color:var(--navy); flex-shrink:0; transition:transform .15s ease;}
+.faq details[open] summary::after{ transform:rotate(45deg); }
+.faq p{ color:var(--text-dim); font-size:.86rem; margin:10px 0 0; line-height:1.5; }
+
+.footer{ text-align:center; padding:30px 20px 10px; color:var(--text-faint); font-size:.75rem; font-family:'IBM Plex Mono',monospace; line-height:1.7;}
+
+.sticky-cta{
+  position:sticky; bottom:14px; margin-top:26px; z-index:5;
+}
+
+@media (max-width:420px){
+  .grid-2{ grid-template-columns:1fr; }
+  .hero h1{ font-size:1.95rem; }
+  .diag-number{ font-size:2.5rem; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+  <symbol id="svgSeal" viewBox="0 0 120 140">
+    <path d="M60 122 L44 138 L48 116 Z" fill="#0F2E5C"/>
+    <path d="M60 122 L76 138 L72 116 Z" fill="#0F2E5C"/>
+    <circle cx="60" cy="58" r="54" fill="#FFFFFF" stroke="#189B54" stroke-width="4"/>
+    <circle cx="60" cy="58" r="44" fill="none" stroke="#189B54" stroke-width="1.5" stroke-dasharray="3 4"/>
+    <text x="60" y="52" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="800" font-size="30" fill="#0F2E5C">7</text>
+    <text x="60" y="76" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-weight="600" font-size="11" letter-spacing="1" fill="#189B54">DIAS</text>
+  </symbol>
+</defs>
+</svg>
+
+<div class="app" id="app">
+  <div class="topbar">
+    <span class="topbar-brand">MÉTODO MEIA GARANTIDA</span>
+    <span class="topbar-tag mono">LEI 12.933/2013</span>
+  </div>
+
+  <main id="quiz">
+    <div class="wrap">
+
+      <!-- STEP 0: INTRO -->
+      <section class="ticket" data-step="intro">
+        <div class="ticket-body" style="text-align:center;">
+          <span class="eyebrow">Diagnóstico de economia · 4 perguntas</span>
+          <h1 class="step-title">Descubra quanto você está deixando de economizar em cada ingresso</h1>
+          <p class="step-sub">Responda 4 perguntas rápidas e veja o quanto você gasta por ano com ingressos pagando inteira.</p>
+          <img src="/pages/tickets-v2.jpg" width="220" height="220" fetchpriority="high" decoding="async" alt="Ingresso de R$40 riscado ao lado de um ingresso de meia-entrada de R$20" style="width:220px; max-width:80%; height:auto; margin:18px auto 6px; display:block;">
+          <div style="margin-top:20px;">
+            <button class="btn" onclick="Quiz.go('q1')">Começar diagnóstico ›</button>
+            <p style="margin:10px 0 0; font-size:.8rem; color:var(--text-faint);">⏱ Leva menos de 2 minutos</p>
+          </div>
+        </div>
+        <div class="ticket-stub"><span>GUIA OFICIAL · 2026</span><span>4 MIN</span></div>
+      </section>
+
+      <!-- STEP 1: FREQUENCIA -->
+      <section class="ticket" data-step="q1" hidden>
+        <div class="ticket-body">
+          <div class="punchrow" id="punchrow-q1"></div>
+          <span class="eyebrow">Pergunta 1 de 4</span>
+          <h2 class="step-title">Com que frequência você vai a eventos por mês?</h2>
+          <p class="step-sub">Cinema, shows, festivais, jogos, teatro — conta tudo.</p>
+          <div class="opt-list">
+            <button class="opt" onclick="Quiz.answer('freq','quase-nunca',0.5)">Quase nunca <span class="opt-arrow">›</span></button>
+            <button class="opt" onclick="Quiz.answer('freq','1x',1)">1 vez por mês <span class="opt-arrow">›</span></button>
+            <button class="opt" onclick="Quiz.answer('freq','2-3x',2.5)">2 a 3 vezes por mês <span class="opt-arrow">›</span></button>
+            <button class="opt" onclick="Quiz.answer('freq','4x+',5)">4 vezes ou mais <span class="opt-arrow">›</span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP INFO -->
+      <section class="ticket info-card" data-step="info1" hidden>
+        <div class="ticket-body">
+          <span class="info-icon">⚖️</span>
+          <h2 class="step-title" style="font-size:1.5rem; margin-top:10px;">Você sabia?</h2>
+          <div class="fact">A Lei Federal da Meia-Entrada (12.933/2013) garante 50% de desconto para estudantes em cinemas, shows, teatros e eventos esportivos em <strong>todo o território nacional</strong> — desde que você tenha a carteirinha correta.</div>
+          <div style="margin-top:20px;">
+            <button class="btn" onclick="Quiz.go('q2')">Continuar ›</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 2: TIPO DE EVENTO -->
+      <section class="ticket" data-step="q2" hidden>
+        <div class="ticket-body">
+          <div class="punchrow" id="punchrow-q2"></div>
+          <span class="eyebrow">Pergunta 2 de 4</span>
+          <h2 class="step-title">Qual tipo de evento você mais frequenta?</h2>
+          <div class="opt-list">
+            <button class="opt" onclick="Quiz.answer('tipo','cinema','sessões de cinema')">🎬 Cinema <span class="opt-arrow">›</span></button>
+            <button class="opt" onclick="Quiz.answer('tipo','shows','shows e festivais')">🎤 Shows e festivais <span class="opt-arrow">›</span></button>
+            <button class="opt" onclick="Quiz.answer('tipo','jogos','jogos')">⚽ Jogos de futebol <span class="opt-arrow">›</span></button>
+            <button class="opt" onclick="Quiz.answer('tipo','teatro','peças e outros eventos')">🎭 Teatro e outros <span class="opt-arrow">›</span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 3: GASTO -->
+      <section class="ticket" data-step="q3" hidden>
+        <div class="ticket-body">
+          <div class="punchrow" id="punchrow-q3"></div>
+          <span class="eyebrow">Pergunta 3 de 4</span>
+          <h2 class="step-title">Quanto você paga, em média, por ingresso?</h2>
+          <div class="opt-list">
+            <button class="opt" onclick="Quiz.answer('preco','ate30',25)">Até R$ 30 <span class="opt-arrow">›</span></button>
+            <button class="opt" onclick="Quiz.answer('preco','30-60',45)">R$ 30 – R$ 60 <span class="opt-arrow">›</span></button>
+            <button class="opt" onclick="Quiz.answer('preco','60-100',80)">R$ 60 – R$ 100 <span class="opt-arrow">›</span></button>
+            <button class="opt" onclick="Quiz.answer('preco','mais100',120)">Mais de R$ 100 <span class="opt-arrow">›</span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 4: CARTEIRINHA -->
+      <section class="ticket" data-step="q4" hidden>
+        <div class="ticket-body">
+          <div class="punchrow" id="punchrow-q4"></div>
+          <span class="eyebrow">Pergunta 4 de 4</span>
+          <h2 class="step-title">Você tem uma carteirinha de estudante válida hoje?</h2>
+          <div class="opt-list">
+            <button class="opt" onclick="Quiz.answer('cart','sim','sim')">Sim, uso normalmente <span class="opt-arrow">›</span></button>
+            <button class="opt" onclick="Quiz.answer('cart','terminei','terminei')">Não, já terminei os estudos <span class="opt-arrow">›</span></button>
+            <button class="opt" onclick="Quiz.answer('cart','nunca','nunca')">Não, nunca tive <span class="opt-arrow">›</span></button>
+            <button class="opt" onclick="Quiz.answer('cart','vencida','vencida')">Tenho, mas está vencida <span class="opt-arrow">›</span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP LOADING -->
+      <section class="ticket" data-step="loading" hidden>
+        <div class="ticket-body loading-wrap">
+          <span class="eyebrow">Emitindo diagnóstico</span>
+          <h2 class="step-title" style="font-size:1.4rem;">Calculando sua economia potencial…</h2>
+          <div class="printer"><div class="printer-bar"></div></div>
+          <div class="loading-msg mono" id="loadingMsg">Verificando frequência de eventos…</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- SALES PAGE -->
+  <main id="sales" hidden>
+    <div class="wrap">
+
+      <section class="ticket">
+        <div class="diag">
+          <span class="diag-eyebrow">Seu diagnóstico</span>
+          <div class="diag-number mono" id="diagNumber">R$ 0</div>
+          <p class="diag-sub">é quanto você pode estar deixando na bilheteria por ano, pagando ingresso inteiro em <strong id="diagTipo">eventos</strong>.</p>
+          <p class="diag-note" id="diagNote">baseado em ~1x/mês · R$45 por ingresso</p>
+        </div>
+        <div class="perf"></div>
+        <div class="ticket-body" style="text-align:center; padding-top:22px;">
+          <p id="personalNote" style="color:var(--text-dim); font-size:.9rem; margin:0 0 16px;">A boa notícia: existe um caminho 100% legal pra buscar essa metade de volta — com curso gratuito reconhecido e carteirinha oficial, sem carteirinha falsa e sem gambiarra.</p>
+          <button class="btn btn-red" onclick="document.getElementById('offerAnchor').scrollIntoView({behavior:'smooth'})">Ver como funciona ↓</button>
+        </div>
+      </section>
+
+      <section class="hero">
+        <div class="badge-row">
+          <span class="badge">100% dentro da lei</span>
+          <span class="badge">Lei 12.933/2013</span>
+          <span class="badge">Curso gratuito</span>
+        </div>
+        <span class="eyebrow" style="display:block; margin-bottom:6px;">MÉTODO MEIA GARANTIDA</span>
+        <h1>Pague Metade do Preço em <span class="accent">Cinema, Shows e Eventos</span></h1>
+        <p class="hero-sub">Todo brasileiro que está cursando algo tem direito à meia-entrada por lei. O guia te ensina, passo a passo, a se inscrever em um curso 100% online e gratuito — e depois como solicitar sua carteirinha de estudante, o <strong>Documento Nacional do Estudante (DNE)</strong>, válida e dentro da lei.</p>
+
+        <div class="wa-audio">
+          <p class="wa-audio-label">Ouça esse áudio rápido do Gabriel que fez o passo a passo e está economizando muito! 👇</p>
+          <div class="wa-chat">
+            <div class="wa-chat-head">
+              <img class="wa-avatar-img" data-src="/pages/gabriel-v1.jpg" width="34" height="34" decoding="async" alt="Foto de Gabriel Mendes">
+              <div><div class="wa-chat-name">Gabriel Mendes</div><div class="wa-chat-sub">mensagem de voz</div></div>
+            </div>
+            <div class="wa-voice">
+              <div class="wa-voice-row">
+                <button type="button" class="wa-play" id="waPlay" aria-label="Reproduzir áudio">
+                  <svg class="i-play" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+                  <svg class="i-pause" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor"/></svg>
+                </button>
+                <div class="wa-wave" id="waWave" role="presentation"></div>
+              </div>
+              <div class="wa-voice-meta"><span id="waDur">1:00</span><span>15:22 <span class="ck">✓✓</span></span></div>
+            </div>
+          </div>
+          <audio id="waAudioEl" preload="none" src="/audio/audio-whatsapp-v1.m4a"></audio>
+        </div>
+
+        <div class="carousel-wrap">
+          <button class="carousel-arrow prev" onclick="Carousel.move(-1)" aria-label="Imagem anterior">‹</button>
+          <div class="carousel" id="heroCarousel">
+            <div class="slide">
+              <img data-src="/pages/capa.jpg" width="720" height="810" decoding="async" alt="Capa do guia Método Meia Garantida com exemplo do Documento Nacional do Estudante" style="width:100%; height:auto; border-radius:6px; display:block;">
+              <p class="slide-cap">Página 1 · o guia real que você recebe</p>
+            </div>
+            <div class="slide">
+              <img data-src="/pages/passo.jpg" width="720" height="672" decoding="async" alt="Página do guia mostrando o passo 2, acessar a plataforma do IFRS" style="width:100%; height:auto; border-radius:6px; display:block;">
+              <p class="slide-cap">Cada passo, explicado com prints</p>
+            </div>
+            <div class="slide">
+              <img data-src="/pages/bonus.jpg" width="720" height="875" decoding="async" alt="Página do guia listando os bônus exclusivos" style="width:100%; height:auto; border-radius:6px; display:block;">
+              <p class="slide-cap">+ todos os bônus inclusos</p>
+            </div>
+          </div>
+          <button class="carousel-arrow next" onclick="Carousel.move(1)" aria-label="Próxima imagem">›</button>
+        </div>
+        <div class="dots"><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
+
+        <div style="margin-top:22px;">
+          <button class="btn" onclick="document.getElementById('offerAnchor').scrollIntoView({behavior:'smooth'})">Quero garantir minha meia-entrada</button>
+        </div>
+      </section>
+
+      <div class="perf"></div>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Pra quem é</h2>
+        </div>
+        <div class="chip-list">
+          <span class="chip">Não está matriculado(a) em nada hoje</span>
+          <span class="chip">Ama cinema, show ou futebol</span>
+          <span class="chip">Cansou de pagar ingresso inteiro</span>
+          <span class="chip">Carteirinha vencida ou nunca teve</span>
+          <span class="chip">Quer economizar sem gambiarra</span>
+        </div>
+      </section>
+
+      <div class="perf"></div>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Bônus inclusos</h2>
+          <p>De graça pra quem garantir hoje.</p>
+        </div>
+        <div class="bonus">
+          <span class="bonus-num mono">01</span>
+          <div class="bonus-txt"><h3>Checklist Meia Garantida</h3><p>Página destacável com 14 itens de conferência</p></div>
+          <div class="bonus-price"><span class="bonus-was">R$ 17</span><span class="bonus-now">GRÁTIS</span></div>
+        </div>
+        <div class="bonus">
+          <span class="bonus-num mono">02</span>
+          <div class="bonus-txt"><h3>Carteirinha Sempre à Mão</h3><p>Atalho na tela inicial pra abrir sua carteira em 1 toque</p></div>
+          <div class="bonus-price"><span class="bonus-was">R$ 12</span><span class="bonus-now">GRÁTIS</span></div>
+        </div>
+        <div class="bonus">
+          <span class="bonus-num mono">03</span>
+          <div class="bonus-txt"><h3>Acesso vitalício + atualizações</h3><p>O guia é revisado sempre que o processo muda</p></div>
+          <div class="bonus-price"><span class="bonus-was">R$ 10</span><span class="bonus-now">GRÁTIS</span></div>
+        </div>
+        <div class="bonus">
+          <span class="bonus-num mono">04</span>
+          <div class="bonus-txt"><h3>Spotify e YouTube Premium mais baratos</h3><p>Sua carteirinha também libera o plano universitário desses apps</p></div>
+          <div class="bonus-price"><span class="bonus-was">R$ 12</span><span class="bonus-now">GRÁTIS</span></div>
+        </div>
+        <div class="bonus">
+          <span class="bonus-num mono">05</span>
+          <div class="bonus-txt"><h3>+ 9 sites com benefícios de estudante</h3><p>Adobe, Microsoft 365, GitHub, Notion e mais</p></div>
+          <div class="bonus-price"><span class="bonus-was">R$ 12</span><span class="bonus-now">GRÁTIS</span></div>
+        </div>
+      </section>
+
+      <div class="perf"></div>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Quem já garantiu a meia</h2>
+        </div>
+        <div class="wa-card">
+          <div class="wa-head"><div class="wa-avatar">J</div><div class="wa-name">Juliana R.</div><div class="wa-time">21:04</div></div>
+          <div class="wa-bubble">gente funcionou mesmo 😭 fiz o curso gratuito do IFRS, pedi a carteirinha e hoje já uso pra pagar meia no cinema</div>
+          <div class="wa-check">✓✓ Lida</div>
+        </div>
+        <div class="wa-card">
+          <div class="wa-head"><div class="wa-avatar">M</div><div class="wa-name">Marcos T.</div><div class="wa-time">18:37</div></div>
+          <div class="wa-bubble">achei que ia ser complicado mas segui o passo a passo, o curso é de graça e resolvi tudo numa tarde só</div>
+          <div class="wa-check">✓✓ Lida</div>
+        </div>
+        <div class="wa-card">
+          <div class="wa-head"><div class="wa-avatar">B</div><div class="wa-name">Bia F.</div><div class="wa-time">09:12</div></div>
+          <div class="wa-bubble">paguei só a taxa da carteirinha, valeu muito a pena os 37,90 do guia</div>
+          <div class="wa-check">✓✓ Lida</div>
+        </div>
+      </section>
+
+      <div class="perf" id="offerAnchor"></div>
+
+      <section class="ticket offer">
+        <div class="ticket-body">
+          <span class="eyebrow" style="text-align:center; display:block;">Recapitulando tudo que você recebe hoje</span>
+          <div style="text-align:left; max-width:380px; margin:16px auto 0; display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; align-items:center; gap:10px;"><span style="flex-shrink:0; width:20px; height:20px; border-radius:50%; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.7rem;">✓</span><span style="font-size:.9rem; color:var(--text); flex:1;">Guia completo em PDF · 18 passos</span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="flex-shrink:0; width:20px; height:20px; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.7rem;">✓</span><span style="font-size:.9rem; color:var(--text); flex:1;">Checklist Meia Garantida (14 itens)</span><span style="flex-shrink:0; text-align:right;"><span class="bonus-was mono" style="display:block;">R$ 17</span><span class="bonus-now mono">GRÁTIS</span></span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="flex-shrink:0; width:20px; height:20px; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.7rem;">✓</span><span style="font-size:.9rem; color:var(--text); flex:1;">Carteirinha Sempre à Mão (atalho no celular)</span><span style="flex-shrink:0; text-align:right;"><span class="bonus-was mono" style="display:block;">R$ 12</span><span class="bonus-now mono">GRÁTIS</span></span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="flex-shrink:0; width:20px; height:20px; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.7rem;">✓</span><span style="font-size:.9rem; color:var(--text); flex:1;">Acesso vitalício + atualizações</span><span style="flex-shrink:0; text-align:right;"><span class="bonus-was mono" style="display:block;">R$ 10</span><span class="bonus-now mono">GRÁTIS</span></span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="flex-shrink:0; width:20px; height:20px; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.7rem;">✓</span><span style="font-size:.9rem; color:var(--text); flex:1;">Spotify e YouTube Premium mais baratos</span><span style="flex-shrink:0; text-align:right;"><span class="bonus-was mono" style="display:block;">R$ 12</span><span class="bonus-now mono">GRÁTIS</span></span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="flex-shrink:0; width:20px; height:20px; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.7rem;">✓</span><span style="font-size:.9rem; color:var(--text); flex:1;">+ 9 sites com benefícios de estudante</span><span style="flex-shrink:0; text-align:right;"><span class="bonus-was mono" style="display:block;">R$ 12</span><span class="bonus-now mono">GRÁTIS</span></span></div>
+          </div>
+          <div class="perf" style="margin:22px -26px 18px;"></div>
+          <div id="urgencyBar" style="display:flex; align-items:center; justify-content:center; gap:8px; background:var(--warn-bg); color:var(--warn); border-radius:20px; padding:7px 14px; font-size:.78rem; font-weight:600; margin:0 auto 16px; width:fit-content;">
+            <span>⏳</span><span>Condição especial expira em <span id="countdown" class="mono">23:59:59</span></span>
+          </div>
+          <div class="offer-was mono">R$ 97,90</div>
+          <div class="offer-now mono"><span>R$</span>37,90</div>
+          <p class="offer-cap">pagamento único · acesso vitalício · sem mensalidade</p>
+          <button class="btn btn-red" onclick="goToCheckout()">Garantir Meia-Entrada Agora</button>
+          <div class="stamp mono">GARANTIA 7 DIAS</div>
+        </div>
+        <div class="ticket-stub"><span>MÉTODO MEIA GARANTIDA</span><span>R$ 37,90</span></div>
+      </section>
+
+      <section class="section faq">
+        <div class="section-head">
+          <svg viewBox="0 0 120 140" style="width:76px; height:auto; margin:0 auto 10px; display:block;"><use href="#svgSeal"/></svg>
+          <h2>Garantia incondicional de 7 dias</h2>
+          <p>Se por qualquer motivo não gostar do material, devolvemos 100% do seu dinheiro. Sem perguntas, sem burocracia.</p>
+        </div>
+        <div class="section-head" style="margin-top:26px;"><h2>Perguntas frequentes</h2></div>
+        <details>
+          <summary>Isso é ilegal ou é carteirinha falsa?</summary>
+          <p>Não. Você se matricula de verdade em um curso gratuito reconhecido e solicita sua Carteira de Identificação Estudantil junto a uma entidade emissora, dentro dos critérios da Lei 12.933/2013. Documento real, processo real.</p>
+        </details>
+        <details>
+          <summary>A aprovação da carteirinha é garantida?</summary>
+          <p>A inscrição no curso gratuito é garantida, pois ele é aberto a qualquer pessoa. Já a emissão da carteirinha depende da análise da entidade emissora e da documentação enviada — por isso o guia te ensina a confirmar a aceitação antes de pagar qualquer taxa.</p>
+        </details>
+        <details>
+          <summary>Preciso pagar pelo curso?</summary>
+          <p>Não. O curso indicado no guia é 100% gratuito e online. A única cobrança à parte é a taxa de emissão cobrada pela entidade que produz a carteirinha.</p>
+        </details>
+        <details>
+          <summary>Funciona em todo o Brasil?</summary>
+          <p>Sim. A Lei da Meia-Entrada é federal e vale em cinemas, shows, teatros e eventos esportivos em todo o território nacional.</p>
+        </details>
+        <details>
+          <summary>O que cobre a garantia de 7 dias?</summary>
+          <p>Se o guia não for pra você, devolvemos 100% do valor pago pelo material em até 7 dias. A garantia é sobre a sua compra do guia — não sobre a decisão da entidade emissora da carteirinha.</p>
+        </details>
+        <details>
+          <summary>Já sou adulto(a) e trabalho de carteira assinada, ainda funciona?</summary>
+          <p>Sim. A Lei da Meia-Entrada não tem limite de idade nem exige que você seja adolescente — vale para qualquer pessoa regularmente matriculada em curso reconhecido, inclusive quem já trabalha ou é CLT.</p>
+        </details>
+      </section>
+
+      <div class="wrap sticky-cta">
+        <button class="btn btn-red" onclick="goToCheckout()">Quero economizar agora · R$37,90</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var answers = {};
+
+  var prefetched = false;
+  function prefetchSalesImages(){
+    if(prefetched) return;
+    prefetched = true;
+    document.querySelectorAll('img[data-src]').forEach(function(i){ i.src = i.getAttribute('data-src'); i.removeAttribute('data-src'); });
+  }
+  window.addEventListener('load', function(){ setTimeout(prefetchSalesImages, 1500); });
+
+  function setPunch(step, n){
+    var row = document.getElementById('punchrow-'+step);
+    if(!row) return;
+    row.innerHTML = '';
+    for(var i=0;i<4;i++){
+      var d = document.createElement('div');
+      d.className = 'punch' + (i < n ? ' done' : '');
+      row.appendChild(d);
+    }
+  }
+  ['q1','q2','q3','q4'].forEach(function(s,i){ setPunch(s, i); });
+
+  window.Quiz = {
+    go: function(step){
+      document.querySelectorAll('[data-step]').forEach(function(el){ el.hidden = true; });
+      var target = document.querySelector('[data-step="'+step+'"]');
+      if(target){ target.hidden = false; target.scrollIntoView({behavior:'smooth', block:'start'}); }
+      var order = ['intro','q1','info1','q2','q3','q4','loading'];
+      var idx = order.indexOf(step);
+      var punchIdx = {q1:0,info1:1,q2:1,q3:2,q4:3,loading:4}[step];
+      if(punchIdx !== undefined){
+        ['q1','q2','q3','q4'].forEach(function(s,i){ setPunch(s, Math.min(punchIdx,4)); });
+      }
+      if(window.fbq){ fbq('trackCustom', 'Quiz_Step_'+step); }
+      if(step === 'q1'){ prefetchSalesImages(); }
+      if(step === 'loading'){ this.runLoading(); }
+    },
+    answer: function(key, value, meta){
+      answers[key] = value;
+      answers[key+'_meta'] = meta;
+      if(window.fbq){ fbq('trackCustom', 'Quiz_Answer_'+key, {answer: value}); }
+      var next = {q1:'info1', q2:'q3', q3:'q4', q4:'loading'};
+      var cur = Object.keys({freq:'q1',tipo:'q2',preco:'q3',cart:'q4'}).indexOf(key);
+      var map = {freq:'info1', tipo:'q3', preco:'q4', cart:'loading'};
+      this.go(map[key]);
+    },
+    runLoading: function(){
+      var msgs = ['Verificando frequência de eventos…','Calculando gasto médio anual…','Aplicando desconto legal de 50%…','Gerando seu diagnóstico personalizado…'];
+      var el = document.getElementById('loadingMsg');
+      var i = 0;
+      el.textContent = msgs[0];
+      var timer = setInterval(function(){
+        i++;
+        if(i < msgs.length){ el.textContent = msgs[i]; }
+      }, 650);
+      setTimeout(function(){
+        clearInterval(timer);
+        Quiz.reveal();
+      }, 2900);
+    },
+    reveal: function(){
+      var freq = answers.freq_meta || 1;
+      var preco = answers.preco_meta || 45;
+      var monthly = freq * preco * 0.5;
+      var annual = Math.round(monthly * 12);
+      var fmt = function(n){ return 'R$ ' + n.toLocaleString('pt-BR', {maximumFractionDigits:0}); };
+
+      document.getElementById('diagNumber').textContent = fmt(annual);
+      document.getElementById('diagTipo').textContent = answers.tipo_meta || 'eventos';
+      document.getElementById('diagNote').textContent = 'baseado em ' + (answers.freq==='quase-nunca'?'menos de 1x':answers.freq) + '/mês · ~R$' + preco + ' por ingresso';
+
+      var notes = {
+        sim: 'Você já tem carteirinha, mas ela realmente é válida perante a Lei da Meia-Entrada? Muita gente perde o desconto na bilheteria por usar uma carteirinha não reconhecida. O guia te mostra como emitir uma 100% válida.',
+        terminei: 'Mesmo sem estar matriculado(a) hoje, existe um caminho 100% legal pra voltar a ter uma carteirinha válida — sem voltar pra faculdade.',
+        nunca: 'Nunca teve carteirinha de estudante? Esse é o caminho mais direto e 100% legal pra conseguir a sua, mesmo sem estar estudando hoje.',
+        vencida: 'Carteirinha vencida não garante mais meia-entrada na bilheteria. O guia te mostra como regularizar em poucos passos.'
+      };
+      var noteEl = document.getElementById('personalNote');
+      if(noteEl && notes[answers.cart]){ noteEl.textContent = notes[answers.cart]; }
+
+      document.getElementById('quiz').hidden = true;
+      var sales = document.getElementById('sales');
+      sales.hidden = false;
+      sales.scrollIntoView({behavior:'smooth', block:'start'});
+      if(window.fbq){
+        fbq('track', 'Lead');
+        fbq('trackCustom', 'Diagnostico_Visto', {value: annual, currency: 'BRL'});
+        fbq('track', 'ViewContent', {value: 37.90, currency: 'BRL', content_name: 'Método Meia Garantida'});
+      }
+    }
+  };
+
+  window.Carousel = {
+    move: function(dir){
+      var el = document.getElementById('heroCarousel');
+      if(!el) return;
+      var slide = el.querySelector('.slide');
+      var amount = slide ? (slide.getBoundingClientRect().width + 14) : el.clientWidth * 0.8;
+      el.scrollBy({ left: amount * dir, behavior: 'smooth' });
+    }
+  };
+
+  (function countdown(){
+    var el = document.getElementById('countdown');
+    if(!el) return;
+    function tick(){
+      var now = new Date();
+      var end = new Date(now);
+      end.setHours(23,59,59,999);
+      var diff = Math.max(0, end - now);
+      var h = String(Math.floor(diff/3600000)).padStart(2,'0');
+      var m = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+      var s = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+      el.textContent = h+':'+m+':'+s;
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+
+  window.goToCheckout = function(){
+    if(window.fbq){ fbq('track', 'InitiateCheckout'); }
+    window.location.href = 'https://pay.cakto.com.br/bhn8j66_1004467';
+  };
+
+  (function(){
+    var a = document.getElementById('waAudioEl'), b = document.getElementById('waPlay'), w = document.getElementById('waWave'), d = document.getElementById('waDur');
+    if(!a || !b || !w) return;
+    var H = [30,55,40,70,45,85,50,35,65,90,55,40,75,60,35,80,50,45,70,30,60,85,40,55,75,35,50,65,45,30,55,40,60,35];
+    H.forEach(function(h){ var s = document.createElement('span'); s.style.height = h + '%'; w.appendChild(s); });
+    var bars = w.children, sent = false, total = 60;
+    function fmt(s){ s = Math.max(0, Math.round(s)); return Math.floor(s/60) + ':' + ('0' + (s%60)).slice(-2); }
+    function paint(p){ var n = Math.round(p * bars.length); for(var i = 0; i < bars.length; i++){ bars[i].className = i < n ? 'on' : ''; } }
+    b.addEventListener('click', function(){
+      if(a.paused){
+        var pr = a.play(); if(pr && pr.catch){ pr.catch(function(){}); }
+        if(!sent){ sent = true; if(window.fbq){ fbq('trackCustom', 'Audio_Play'); } }
+      } else { a.pause(); }
+    });
+    a.addEventListener('play', function(){ b.classList.add('on'); b.setAttribute('aria-label', 'Pausar áudio'); });
+    a.addEventListener('pause', function(){ b.classList.remove('on'); b.setAttribute('aria-label', 'Reproduzir áudio'); });
+    a.addEventListener('loadedmetadata', function(){ if(isFinite(a.duration)){ total = a.duration; d.textContent = fmt(total); } });
+    a.addEventListener('timeupdate', function(){ paint(total ? a.currentTime / total : 0); d.textContent = fmt(a.currentTime); });
+    a.addEventListener('ended', function(){ paint(0); d.textContent = fmt(total); b.classList.remove('on'); });
+    w.addEventListener('click', function(e){ if(!isFinite(a.duration)) return; var r = w.getBoundingClientRect(); a.currentTime = ((e.clientX - r.left) / r.width) * a.duration; });
+  })();
+
+  var carousel = document.getElementById('heroCarousel');
+  if(carousel){
+    var dots = document.querySelectorAll('.dots .dot');
+    carousel.addEventListener('scroll', function(){
+      var maxScroll = carousel.scrollWidth - carousel.clientWidth;
+      var idx = maxScroll > 0 ? Math.round((carousel.scrollLeft / maxScroll) * (dots.length - 1)) : 0;
+      dots.forEach(function(d,i){ d.classList.toggle('active', i === idx); });
+    });
+  }
+})();
+</script>
+</body>
+</html>
